@@ -61,7 +61,7 @@ export const constantRoutes = [
     name: 'obituary',
     meta: {
       title: '生死簿',
-      icon: 'obituary'
+      icon: 'obituary_s'
     },
     redirect: '/obituary/user',
     alwaysShow: true,
