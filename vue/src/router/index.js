@@ -56,6 +56,25 @@ export const constantRoutes = [
   },
 
   {
+    path: '/obituary',
+    component: Layout,
+    name: 'obituary',
+    meta: {
+      title: '生死簿',
+      icon: 'obituary'
+    },
+    alwaysShow: true,
+    children: [
+      {
+        path: 'user',
+        name: 'user',
+        component: () => import('@/views/obituary/user'),
+        meta: { title: '用户管理', icon: 'user' }
+      }
+    ]
+  },
+
+  {
     path: '/example',
     component: Layout,
     redirect: '/example/table',
