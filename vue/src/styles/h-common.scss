@@ -1,0 +1,22 @@
+.h-button-text {
+  &-primary {
+    padding: 0;
+    color: #409eff;
+  }
+  &-success {
+    padding: 0;
+    color: #67c23a;
+  }
+  &-warning {
+    padding: 0;
+    color: #e6a23c;
+  }
+  &-danger {
+    padding: 0;
+    color: #f56c6c;
+  }
+  &-default {
+    padding: 0;
+    color: #606266;
+  }
+}
