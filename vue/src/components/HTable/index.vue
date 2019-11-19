@@ -172,22 +172,25 @@
       },
       submit() {
         this.loading = true
+        this.pageNum = 1
+        this.setSearchParams()
         this.getData()
       },
       getData() {
         this.getList(this.searchParams).then(response => {
-          console.log(response)
           this.tableData = response.data.items
           this.total = response.data.total
           this.loading = false
         })
       },
-      handleCurrentChange() {
+      handleCurrentChange(num) {
+        this.searchParams.pageNum = num
         this.loading = true
         this.getData()
       },
-      handleSizeChange() {
-        this.pageNum = 1
+      handleSizeChange(pageSize) {
+        this.searchParams.pageNum = this.pageNum = 1
+        this.searchParams.pageSize = pageSize
         this.loading = true
         this.getData()
       },
@@ -195,7 +198,6 @@
         this.$emit('selectionChange', data)
       },
       sortChange(column, prop, order) {
-        console.log(column, prop, order)
         this.columns.forEach(item => {
           if (item.sortable) {
             this.searchParams[item.prop] = null
@@ -214,13 +216,11 @@
     watch: {
       pageAlign: {
         handler(val) {
-          console.log(val)
           if (val === 'left') {
             this.hPageAlign = 'flex-start'
             return
           }
           if (val === 'right') {
-            console.log('111111111111')
             this.hPageAlign = 'flex-end'
             return
           }

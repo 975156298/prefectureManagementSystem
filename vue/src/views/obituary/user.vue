@@ -7,27 +7,25 @@
       <template #search>
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
           <el-form-item label="姓名">
-            <el-input v-model="formInline.user" placeholder="请输入姓名搜索"></el-input>
+            <el-input v-model="formInline.name" placeholder="请输入姓名搜索"></el-input>
           </el-form-item>
           <el-form-item label="类型">
-            <el-select v-model="formInline.region" placeholder="请选择类型">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+            <el-select v-model="formInline.type" placeholder="请选择类型">
+              <el-option v-for="item in speciesType" :label="item.label" :value="item.value" :key="item.value"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="死亡方式">
-            <el-select v-model="formInline.region" placeholder="请选择死亡方式">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+            <el-select v-model="formInline.mode" placeholder="请选择死亡方式">
+              <el-option v-for="item in deathMode" :label="item.label" :value="item.value" :key="item.value"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="">
-            <el-button type="primary">搜索</el-button>
+            <el-button type="primary" @click="search">搜索</el-button>
             <el-button type="danger">删除多选</el-button>
           </el-form-item>
         </el-form>
       </template>
-      <template #edit="{ value }">
+      <template #operation="{ value }">
         <el-link :underline="false" type="primary" style="margin-right: 10px;">编辑</el-link>
         <h-popover title="您确定删除该条数据吗？" @confirm="delData(value)"></h-popover>
       </template>
@@ -37,7 +35,8 @@
 </template>
 
 <script>
-  import { getList } from '@/api/table'
+  import { getList } from '@/api/obituary'
+  import { getConfig } from '@/api/common'
   import HPopover from "../../components/HPopover/index";
 
   export default {
@@ -48,18 +47,21 @@
         buttons: ['阳寿未尽', '孤魂野鬼', '转世投胎', '已删除'],
         name: '阳寿未尽',
         formInline: {
-          user: '',
-          region: ''
+          name: '',
+          type: '',
+          mode: ''
         },
         columns: [
           { label: 'ID', prop: 'id', align: 'center' },
-          { label: '姓名', prop: 'author', align: 'center' },
-          { label: '寿命', prop: 'pageviews', align: 'center'},
-          { label: '类型', prop: 'pageviews', align: 'center'},
-          { label: '死亡方式', prop: 'pageviews', align: 'center'},
-          { label: '操作', prop: 'operation', slot: 'edit', align: 'center' }
+          { label: '姓名', prop: 'name', align: 'center' },
+          { label: '寿命', prop: 'life', align: 'center'},
+          { label: '类型', prop: 'type', align: 'center'},
+          { label: '死亡方式', prop: 'deathMode', align: 'center'},
+          { label: '操作', prop: 'operation', slot: 'operation', align: 'center' }
         ],
-        visible: false
+        visible: false,
+        speciesType: [],
+        deathMode: []
       }
     },
     computed: {
@@ -67,12 +69,22 @@
         return getList
       }
     },
+    created() {
+      getConfig({config: ['speciesType', 'deathMode']}).then(res => {
+        console.log(res)
+        this.speciesType = res.data.items.speciesType
+        this.deathMode = res.data.items.deathMode
+      })
+    },
     methods: {
       changeMenu(name) {
         this.name = name
       },
       selectionChange(data) {
         console.log(data, '11111111')
+      },
+      search() {
+        this.$refs.hTable.submit()
       },
       delData(data) {
         console.log(data, 'del')
